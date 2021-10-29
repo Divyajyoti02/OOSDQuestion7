@@ -4,53 +4,9 @@
 #include<climits>
 #include "Customer.h"
 #include "Company.h"
+#include "Person.h"
 using namespace std;
 
-
-
-class Person : public Customer {	
-	public:
-		string firstname, lastname;
-		
-		Person(string FirstName, string LastName, string Address[3], string Phone) : Customer(Address, Phone), firstname(FirstName), lastname(LastName) {}
-		
-		void update() {
-			cout << "What to update?" << endl;
-			cout << "1 - firstname" << endl;
-			cout << "2 - lastname" << endl;
-			cout << "3 - address" << endl;
-			cout << "4 - phone" << endl;
-			cin >> choice;
-			
-			/*===================================================*/
-			switch(choice) {
-				case 1:
-					cout << "Enter new first name: ";
-					cin >> firstname;
-					break;
-				case 2:
-					cout << "Enter new last name: ";
-					cin >> lastname;
-					break;
-				case 3:
-					cout << "Enter new address:" << endl;
-					cin.clear();
-					cin.ignore(INT_MAX, '\n');
-					for (int i = 0; i < 3; i++) {
-						cout << "Address line " << i + 1 << ": ";
-						getline(cin, address[i]);
-					}
-					break;
-				case 4:
-					cout << "Enter new phone: ";
-					cin >> phone;
-					break;
-				default:
-					throw "Invalid choice!\n";
-			}
-			/*===================================================*/
-		}
-};
 
 
 class CustomerList {
