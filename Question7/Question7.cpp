@@ -21,7 +21,8 @@ void play() {
 		cout << "5 - Create person" << endl;
 		cout << "6 - Update person" << endl;
 		cout << "7 - Delete person" << endl;
-		cout << "8 - Exit" << endl;
+		cout << "8 - Place order" << endl;
+		cout << "9 - Exit" << endl;
 		cin >> choice;
 		switch(choice) {
 			case 1:
@@ -46,10 +47,13 @@ void play() {
 				cl.deletePerson();
 				break;
 			case 8:
+				cl.placeOrder();
+				break;
+			case 9:
 				exe = false;
 				break;
 			default:
-				throw "Invalid choice!\n";
+				throw invalid_argument("Invalid choice!\n");
 		}
 	}
 }

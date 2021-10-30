@@ -40,6 +40,6 @@ void Company::update() {
 			cin >> phone;
 			break;
 		default:
-			throw "Invalid choice!\n";
+			throw invalid_argument("Invalid choice!\n");
 	}
 }

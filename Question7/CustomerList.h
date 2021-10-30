@@ -11,6 +11,7 @@ class CustomerList {
 		unsigned int choice;
 		vector<Company> cList;
 		vector<Person> pList;
+		string dString;
 		
 		void viewCompanies();
 		void viewPersons();
@@ -22,6 +23,7 @@ class CustomerList {
 		void createPerson();
 		void deletePerson();
 		void updatePerson();
+		void placeOrder();
 		void view();
 };
 
