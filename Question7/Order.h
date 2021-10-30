@@ -15,22 +15,13 @@ class Order {
 	public:
 		bool status;
 		
-		class Date {
-			public:
-				int dd, yy, mm;
+		class Date;
 		
-				Date(int DD, int MM, int YY);
-		};
+		Date* date;
 		
-		Date date;
-		
-		Order(Customer* cust, int dd, int mm, int yy);
+		Order(const Customer* cust, int dd, int mm, int yy);
 		
 		void process();
-
-		friend ostream& operator<<(ostream& out, const Date& date);
 };
-
-ostream& operator<<(ostream& out, const Order::Date& date);
 
 #endif

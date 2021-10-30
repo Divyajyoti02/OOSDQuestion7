@@ -1,16 +1,19 @@
 #include<iostream>
+#include "Order.h"
 using namespace std;
 
+#ifndef DATE_H
+#define DATE_H
 
-
-enum Month{Jan = 1, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec};
-
-class Date {
+class Order::Date {
 	public:
-		unsigned int dd, yy;
-		enum Month mm;
+		int dd, mm, yy;
 		
-		Date(unsigned int DD, enum Month MM, unsigned int YY);
+		Date(int DD, int MM, int YY);
+		
+		friend ostream& operator<<(ostream& out, const Date& date);
 };
 
-ostream& operator<<(ostream& out, const Date& date);
+ostream& operator<<(ostream& out, const Order::Date& date);
+
+#endif

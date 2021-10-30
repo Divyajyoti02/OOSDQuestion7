@@ -1,15 +1,16 @@
 #include<iostream>
 #include "Date.h"
+#include "Order.h"
 using namespace std;
 
 
 
-Date::Date(unsigned int DD, enum Month MM, unsigned int YY) : dd(DD), mm(MM), yy(2000 + YY) {
+Order::Date::Date(int DD, int MM, int YY) : dd(DD), mm(MM), yy(YY) {
 	if (YY > 99)
 		throw "YY should lie between 00-99\n";
 }
 		
-ostream& operator<<(ostream& out, const Date& date) {
+ostream& operator<<(ostream& out, const Order::Date& date) {
 	if (date.dd < 10)
 		out << '0' << date.dd << '/';
 	else
