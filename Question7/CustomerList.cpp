@@ -7,29 +7,29 @@
 #include "Company.h"
 #include "Person.h"
 #include "CustomerList.h"
+#include "OrderList.h"
 using namespace std;
 
 
 
 void CustomerList::viewCompanies() {
-	unsigned int idx = 1;
-	cout << "S.No.\tName\tRegNo\tAddress1\tAddress2\tAddress3\tPhone\tOrders" << endl;
-	for (auto c : cList) {
-		cout << idx++ << "\t" << c.name << "\t" << c.regno << "\t" << c.address[0] << "\t" << c.address[1] << "\t" << c.address[2] << "\t" << c.phone << "\t";
-		for (auto o : c.orderLst) {cout << o << ',';}
+	unsigned int id = 1;
+	cout << "S.No.\tCustomerId\tName\tRegNo\tAddress1\tAddress2\tAddress3\tPhone\tOrders" << endl;
+	for (auto* c : cList) {
+		cout << id++ << "\t" << c << "\t" << c->name << "\t" << c->regno << "\t" << c->address[0] << "\t" << c->address[1] << "\t" << c->address[2] << "\t" << c->phone << "\t";
+		for (auto o : c->orderLst) {cout << o << ',';}
 		cout << endl;
 	}
 }
 		
 void CustomerList::viewPersons() {
-	unsigned int idx = 1;
-	cout << "S.No.\tFirstName\tLastName\tAddress1\tAddress2\tAddress3\tPhone\tOrders" << endl;
-	for (auto p : pList) {
-		cout << idx++ << "\t" << p.firstname << "\t" << p.lastname << "\t" << p.address[0] << "\t" << p.address[1] << "\t" << p.address[2] << "\t" << p.phone << "\t";
-		for (auto o : p.orderLst) {cout << o << ',';}
+	unsigned int id = 1;
+	cout << "S.No.\tCustomerId\tFirstName\tLastName\tAddress1\tAddress2\tAddress3\tPhone\tOrders" << endl;
+	for (auto* p : pList) {
+		cout << id++ << "\t" << p << "\t" << p->firstname << "\t" << p->lastname << "\t" << p->address[0] << "\t" << p->address[1] << "\t" << p->address[2] << "\t" << p->phone << "\t";
+		for (auto o : p->orderLst) {cout << o << ',';}
 		cout << endl;
 	}
-	
 }
 				
 void CustomerList::createCompany() {
@@ -50,15 +50,21 @@ void CustomerList::createCompany() {
 	cout << "Enter new phone: ";
 	cin >> phone;
 		
-	cList.push_back(Company(name, regno, address, phone));
+	Company* c = new Company(name, regno, address, phone);
+	cList.push_back(c);
 }
 		
-void CustomerList::deleteCompany() {
+void CustomerList::deleteCompany(OrderList& ol) {
 	cout << "Select entry to delete:" << endl;
 	viewCompanies();
 	cin >> choice;
 	if (choice > cList.size())
 		throw invalid_argument("Invalid choice!\n");
+	while (!(cList[choice - 1]->orderLst.empty())) {
+		ol.deleteOrder(cList[choice - 1]->orderLst.back());
+		cList[choice - 1]->orderLst.pop_back();
+	}
+	delete cList[choice - 1];
 	cList.erase(cList.begin() + choice - 1);
 }
 		
@@ -68,7 +74,7 @@ void CustomerList::updateCompany() {
 	cin >> choice;
 	if (choice > cList.size())
 		throw invalid_argument("Invalid choice!\n");
-	cList[choice - 1].update();
+	cList[choice - 1]->update();
 }
 		
 void CustomerList::createPerson() {
@@ -89,15 +95,21 @@ void CustomerList::createPerson() {
 	cout << "Enter new phone: ";
 	cin >> phone;
 		
-	pList.push_back(Person(firstname, lastname, address, phone));
+	Person *p = new Person(firstname, lastname, address, phone);
+	pList.push_back(p);
 }
 		
-void CustomerList::deletePerson() {
+void CustomerList::deletePerson(OrderList& ol) {
 	cout << "Select entry to delete:" << endl;
 	viewPersons();
 	cin >> choice;
 	if (choice > pList.size())
 		throw invalid_argument("Invalid choice!\n");
+	while (!(pList[choice - 1]->orderLst.empty())) {
+		ol.deleteOrder(pList[choice - 1]->orderLst.back());
+		pList[choice - 1]->orderLst.pop_back();
+	}
+	delete pList[choice - 1];
 	pList.erase(pList.begin() + choice - 1);
 }
 		
@@ -107,7 +119,7 @@ void CustomerList::updatePerson() {
 	cin >> choice;
 	if (choice > pList.size())
 		throw invalid_argument("Invalid choice!\n");
-	pList[choice - 1].update();
+	pList[choice - 1]->update();
 }
 		
 void CustomerList::view() {
@@ -117,7 +129,7 @@ void CustomerList::view() {
 	viewPersons();
 }
 
-void CustomerList::placeOrder() {
+void CustomerList::placeOrder(OrderList& ol) {
 	regex matchExpr("[0-9][0-9]/[0-1][0-9]/[0-9][0-9]");
 	view();
 	cout << "Who wants to place an order?" << endl;
@@ -134,7 +146,8 @@ void CustomerList::placeOrder() {
 			cin >> dString;
 			if (regex_match(dString, matchExpr)) {
 				int dd = stoi(dString.substr(0, 2)), mm = stoi(dString.substr(3, 2)), yy = stoi(dString.substr(6, 2));
-				cList[choice - 1].addOrder(dd, mm, yy);
+				cList[choice - 1]->addOrder(dd, mm, yy);
+				ol.addOrder(cList[choice - 1]->orderLst.back());
 			} else
 				throw invalid_argument("Invalid string!\n");
 			break;
@@ -147,9 +160,74 @@ void CustomerList::placeOrder() {
 			cin >> dString;
 			if (regex_match(dString, matchExpr)) {
 				int dd = stoi(dString.substr(0, 2)), mm = stoi(dString.substr(3, 2)), yy = stoi(dString.substr(6, 2));
-				pList[choice - 1].addOrder(dd, mm, yy);
+				pList[choice - 1]->addOrder(dd, mm, yy);
+				ol.addOrder(pList[choice - 1]->orderLst.back());
 			} else
 				throw invalid_argument("Invalid string!\n");
+			break;
+		default:
+			throw invalid_argument("Invalid choice!\n");
+	}
+}
+
+void CustomerList::viewPerCustomer(OrderList& ol) {
+	view();
+	cout << "Select type of customer" << endl;
+	cout << "1 - Company" << endl;
+	cout << "2 - Person" << endl;
+	cin >> choice;
+	switch(choice) {
+		case 1:
+			cout << "Select entry to view:" << endl;
+			cin >> choice;
+			if (choice > cList.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.viewPerCustomer(cList[choice - 1]);
+			break;
+		case 2:
+			cout << "Select entry to view:" << endl;
+			cin >> choice;
+			if (choice > pList.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.viewPerCustomer(pList[choice - 1]);
+			break;
+		default:
+			throw invalid_argument("Invalid choice!\n");
+	}
+}
+
+void CustomerList::deleteOrder(OrderList& ol) {
+	view();
+	cout << "Select type of customer" << endl;
+	cout << "1 - Company" << endl;
+	cout << "2 - Person" << endl;
+	cin >> choice;
+	switch(choice) {
+		case 1:
+			cout << "Select customer:" << endl;
+			cin >> choice;
+			if (choice > cList.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.viewPerCustomer(cList[choice - 1]);
+			cout << "Select entry to delete:" << endl;
+			cin >> choice2;
+			if (choice > cList[choice - 1]->orderLst.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.deleteOrder(cList[choice - 1]->orderLst[choice2 - 1]);
+			cList[choice - 1]->orderLst.erase(cList[choice - 1]->orderLst.begin() + choice2 - 1);
+			break;
+		case 2:
+			cout << "Select customer:" << endl;
+			cin >> choice;
+			if (choice > pList.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.viewPerCustomer(pList[choice - 1]);
+			cout << "Select entry to delete:" << endl;
+			cin >> choice2;
+			if (choice > pList[choice - 1]->orderLst.size())
+				throw invalid_argument("Invalid choice!\n");
+			ol.deleteOrder(pList[choice - 1]->orderLst[choice2 - 1]);
+			pList[choice - 1]->orderLst.erase(pList[choice - 1]->orderLst.begin() + choice2 - 1);
 			break;
 		default:
 			throw invalid_argument("Invalid choice!\n");

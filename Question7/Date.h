@@ -1,4 +1,5 @@
 #include<iostream>
+#include<string>
 #include "Order.h"
 using namespace std;
 
@@ -10,10 +11,11 @@ class Order::Date {
 		int dd, mm, yy;
 		
 		Date(int DD, int MM, int YY);
+		string to_string() const; 
 		
-		friend ostream& operator<<(ostream& out, const Date& date);
+		//friend ostream& operator<<(ostream& out, const Date& date);
 };
 
-ostream& operator<<(ostream& out, const Order::Date& date);
+ostream& operator<<(ostream& out, const Order::Date* date);
 
 #endif

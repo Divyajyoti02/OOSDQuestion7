@@ -1,6 +1,7 @@
 #include<string>
 #include "Company.h"
 #include "Person.h"
+#include "OrderList.h"
 using namespace std;
 
 #ifndef CUSTOMERLIST_H
@@ -8,9 +9,9 @@ using namespace std;
 
 class CustomerList {
 	private:
-		unsigned int choice;
-		vector<Company> cList;
-		vector<Person> pList;
+		unsigned int choice, choice2;
+		vector<Company*> cList;
+		vector<Person*> pList;
 		string dString;
 		
 		void viewCompanies();
@@ -18,13 +19,15 @@ class CustomerList {
 		
 	public:
 		void createCompany();
-		void deleteCompany();
+		void deleteCompany(OrderList& ol);
 		void updateCompany();
 		void createPerson();
-		void deletePerson();
+		void deletePerson(OrderList& ol);
 		void updatePerson();
-		void placeOrder();
+		void placeOrder(OrderList& ol);
 		void view();
+		void viewPerCustomer(OrderList& ol);
+		void deleteOrder(OrderList& ol);
 };
 
 #endif

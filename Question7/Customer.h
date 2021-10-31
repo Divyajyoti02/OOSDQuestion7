@@ -15,11 +15,12 @@ class Customer {
 	public:
 		string address[3];
 		string phone;
-		vector<const Order*> orderLst;
+		vector<Order*> orderLst;
 		
 		Customer(string Address[3], string Phone);
 		virtual void update() = 0;
 		void addOrder(int DD, int MM, int YY);
+		void deleteOrder();
 };
 
 #endif

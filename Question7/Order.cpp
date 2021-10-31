@@ -8,9 +8,8 @@
 using namespace std;
 
 		
-Order::Order(const Customer* cust, int dd, int mm, int yy) : status(false), customer(cust) {
-	Date d = Date(dd, mm, yy);
-	date = &d;
-}
+Order::Order(Customer* cust, int dd, int mm, int yy) : status(false), customer(cust) {date = new Date(dd, mm, yy);}
+
+Order::~Order() {delete date;}
 		
 void Order::process() {status = true;}

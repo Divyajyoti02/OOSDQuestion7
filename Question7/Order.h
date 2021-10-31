@@ -9,17 +9,16 @@ using namespace std;
 #define ORDER_H
 
 class Order {
-	private:
-		const Customer* customer;
-		
 	public:
 		bool status;
 		
-		class Date;
+		Customer* customer;
 		
+		class Date;
 		Date* date;
 		
-		Order(const Customer* cust, int dd, int mm, int yy);
+		Order(Customer* cust, int dd, int mm, int yy);
+		~Order();
 		
 		void process();
 };
